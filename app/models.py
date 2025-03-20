@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine, Column, String, Integer, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from .config import Config
+from app.config import Config
+from app.database import Base, get_db_connection, engine
 
 Base = declarative_base()
 
@@ -20,13 +21,10 @@ class ScheduledTask(Base):
     args = Column(JSON, nullable=True)
 
 # Database engine and session
-engine = create_engine(Config.DATABASE_URL)
 Base.metadata.create_all(engine)
-Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 
 if __name__ == "__main__":
-    session = Session()
+    session = get_db_connection()
 
     # Create a new scheduled task
     new_task = ScheduledTask(
