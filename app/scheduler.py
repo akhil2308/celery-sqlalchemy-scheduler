@@ -2,7 +2,8 @@ import logging
 from datetime import timedelta, datetime
 from celery.beat import Scheduler, ScheduleEntry
 from celery.schedules import schedule, crontab
-from .models import Session, ScheduledTask
+from app.models import Session, ScheduledTask
+from app.config import Config
 
 class SQLAlchemyScheduler(Scheduler):
     def __init__(self, *args, **kwargs):
@@ -15,7 +16,7 @@ class SQLAlchemyScheduler(Scheduler):
             Syncs every 5 minutes or after 10 tasks, whichever comes first.
         """ 
         #: How often to sync the schedule (3 minutes by default)
-        self.sync_every = 30
+        self.sync_every = Config.SCHEDULER_SYNC_EVERY
         #: How many tasks can be called before a sync is forced.
         # self.sync_every_tasks = None
         logging.info("SQLAlchemyScheduler initialized.")
