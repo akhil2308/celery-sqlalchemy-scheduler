@@ -9,7 +9,7 @@ def create_celery_app():
         broker_url=Config.CELERY_BROKER_URL,
         result_backend=Config.CELERY_RESULT_BACKEND,
         timezone=Config.CELERY_TIMEZONE,
-        enable_utc=Config.CELERY_ENABLE_UTC,
+        # enable_utc=Config.CELERY_ENABLE_UTC,
         beat_scheduler="app.scheduler.SQLAlchemyScheduler",
         imports=[
             "app.tasks.email_tasks",
