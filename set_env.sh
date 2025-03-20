@@ -1,3 +1,9 @@
+# CONCURRENCY = CPU cores * 2
+# export CELERY_MODE="" (worker or beat)
+export CONCURRENCY="3"
+export MAX_INTERVAL=60
+export SCHEDULER_SYNC_EVERY=30
+
 export REDIS_HOST="localhost"
 export REDIS_PORT="6379"
 export REDIS_DB="0"
