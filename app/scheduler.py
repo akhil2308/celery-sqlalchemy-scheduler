@@ -2,7 +2,8 @@ import logging
 from datetime import timedelta, datetime
 from celery.beat import Scheduler, ScheduleEntry
 from celery.schedules import schedule, crontab
-from app.models import Session, ScheduledTask
+from app.models import ScheduledTask
+from app.database import get_db_connection
 from app.config import Config
 
 class SQLAlchemyScheduler(Scheduler):
@@ -29,7 +30,7 @@ class SQLAlchemyScheduler(Scheduler):
 
     def sync(self):
         logging.info("Syncing schedule with database...")
-        session = Session()
+        session = get_db_connection()
         try:
             db_tasks = session.query(ScheduledTask).all()
             current_ids = {task.id for task in db_tasks}
@@ -84,9 +85,9 @@ class SQLAlchemyScheduler(Scheduler):
                     self.schedule[entry_name] = new_entry
                     logging.info("Added new schedule entry: %s", entry_name)
                     
-                    # Use helper method to get next_run_time
-                    next_run_time = self._get_next_run_time(new_entry)
-                    logging.info(f"Next run time for {entry_name}: {next_run_time}")
+                    # Use helper method to get next_run_time (not working as intended)
+                    # next_run_time = self._get_next_run_time(new_entry)
+                    # logging.info(f"Next run time for {entry_name}: {next_run_time}")
                     
                 else:
                     existing_entry = self.schedule[entry_name]
@@ -94,9 +95,9 @@ class SQLAlchemyScheduler(Scheduler):
                     existing_entry.args = task_args
                     logging.info("Updated schedule entry: %s", entry_name)
                     
-                    # Use helper method to get next_run_time
-                    next_run_time = self._get_next_run_time(existing_entry)
-                    logging.info(f"Next run time for {entry_name}: {next_run_time}")
+                    # Use helper method to get next_run_time (not working as intended)
+                    # next_run_time = self._get_next_run_time(existing_entry)
+                    # logging.info(f"Next run time for {entry_name}: {next_run_time}")
                 
         except Exception as e:
             logging.error("Error during sync: %s", e)
